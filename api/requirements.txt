@@ -17,6 +17,7 @@ requests==2.26.0
 sacremoses==0.0.45
 six==1.15.0
 tokenizers==0.10.3
+toml==0.10.2
 torch==1.9.1
 tqdm==4.62.3
 transformers==4.10.3
