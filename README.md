@@ -4,8 +4,10 @@ Generate realistic news videos solely by providing your transcript. We summarize
 
 ## Features
 - [x] Text Summarization
-- [x] Text Translation
+- [ ] Text Translation
+- [ ] Speech Synthesis
 - [x] Video Generation
+- [x] Lip Synchronization
 - [ ] Multiple Language Support
 - [ ] Make Your Own Speaker
 
