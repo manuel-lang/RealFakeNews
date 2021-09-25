@@ -180,7 +180,7 @@ def inference(output_path, checkpoint_path, input_video, input_audio, face_det_b
 	args.face_det_batch_size = face_det_batch_size
 
 	if os.path.isfile(input_video) and input_video.split('.')[1] in ['jpg', 'png', 'jpeg']:
-	args.static = True
+		args.static = True
 
 	video_stream = cv2.VideoCapture(input_video)
 	fps = video_stream.get(cv2.CAP_PROP_FPS)

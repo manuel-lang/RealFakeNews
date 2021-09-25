@@ -31,6 +31,9 @@ class TextToAudio:
         )
         self._utils = torch.hub.load('NVIDIA/DeepLearningExamples:torchhub', 'nvidia_tts_utils')
 
+    def _train(self):
+        pass
+
     def parse_text(self, text_to_convert: str):
         print(f'Converting "{text_to_convert}" into audio with rate {self._rate} and save it to "{self._output_path}".')
         sequences, lengths = self._utils.prepare_input_sequence([text_to_convert])
