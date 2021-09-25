@@ -1,11 +1,13 @@
 from os import listdir, path
 import numpy as np
-import scipy, cv2, os, sys, audio
+import scipy, cv2, os, sys, Wav2Lip.audio
 import json, subprocess, random, string
 from tqdm import tqdm
 from glob import glob
-import torch, face_detection
-from models import Wav2Lip
+import torch
+import Wav2Lip.face_detection
+# from models import Wav2Lip
+from Wav2Lip.models.wav2lip import Wav2Lip
 import platform
 
 args_static = False
