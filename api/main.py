@@ -10,6 +10,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.text_to_speech import TextToAudio
+from api.speech_to_video import SpeechToVideo
 
 dictConfig(LogConfig().dict())
 logger = logging.getLogger("deep-fake-news")
@@ -17,6 +18,10 @@ text_to_audio = TextToAudio(
     output_path='',
     output_name='audio.wav',
     rate=22050
+)
+speech_to_video = SpeechToVideo(
+    output_path='',
+    output_name='output_video.mp4',
 )
 app = FastAPI(debug=True)
 
@@ -51,5 +56,6 @@ def create_video(request_data: APIInput) -> Dict:
 
     logger.info("Creating video...")
     # Create video
+    # output_path_video = speech_to_video.generate_video(self, model_path="wav2lip.pth", video_path="input_video.mp4", audio_path="input_audio.wav")
 
     return {"Hello": "World"}
