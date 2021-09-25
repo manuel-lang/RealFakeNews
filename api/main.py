@@ -56,6 +56,6 @@ def create_video(request_data: APIInput) -> Dict:
 
     logger.info("Creating video...")
     # Create video
-    # output_path_video = speech_to_video.generate_video(self, model_path="wav2lip.pth", video_path="input_video.mp4", audio_path="input_audio.wav")
+    # output_path_video = speech_to_video.generate_video(self, model_path="wav2lip.pth", video_path="input_video.mp4", audio_path=output_path)
 
     return {"Hello": "World"}
