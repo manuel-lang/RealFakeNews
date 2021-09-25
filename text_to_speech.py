@@ -3,7 +3,11 @@ from scipy.io.wavfile import write
 
 
 def _load_model_from_torch_hub(repo: str, model: str, model_math: str = '', remove_weightnorm: bool = False):
-    model = torch.hub.load(repo, model, model_math=model_math)
+    if model_math == '':
+        model = torch.hub.load(repo_or_dir=repo, model=model)
+    else:
+        model = torch.hub.load(repo_or_dir=repo, model=model, model_math=model_math)
+
     if remove_weightnorm:
         model = model.remove_weightnorm(model)
     model = model.to('cuda')
@@ -26,7 +30,7 @@ class TextToAudio:
             model='nvidia_waveglow',
             model_math='fp16'
         )
-        self._utils = torch.hub.load('NVIDIA/DeepLearningExamples:torchhub', 'nvidia_tts_utils')  # move this into the _load_model_from_torch_hub function
+        self._utils = torch.hub.load('NVIDIA/DeepLearningExamples:torchhub', 'nvidia_tts_utils')
 
     def parse_text(self):
         print(f'Converting "{self._text_to_convert}" into audio with rate {self._rate} and save it to "{self._output_path}".')
