@@ -1,2 +1,5 @@
 venv/
+data
+.idea
+audio.wav
 **/*cache*
