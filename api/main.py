@@ -9,8 +9,8 @@ from typing import Dict
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.text_to_speech import TextToAudio
-from api.speech_to_video import SpeechToVideo
+from text_to_speech import TextToAudio
+from speech_to_video import SpeechToVideo
 
 dictConfig(LogConfig().dict())
 logger = logging.getLogger("deep-fake-news")
