@@ -1,22 +1,24 @@
 from os import listdir, path
 import numpy as np
-import scipy, cv2, os, sys, argparse, audio
+import scipy, cv2, os, sys, argparse, Wav2Lip.audio
 import json, subprocess, random, string
 from tqdm import tqdm
 from glob import glob
-import torch, face_detection
-from models import Wav2Lip
+import torch
+import Wav2Lip.face_detection
+# from models import Wav2Lip
+from Wav2Lip.models.wav2lip import Wav2Lip
 import platform
 
 parser = argparse.ArgumentParser(description='Inference code to lip-sync videos in the wild using Wav2Lip models')
 
 parser.add_argument('--checkpoint_path', type=str, 
-					help='Name of saved checkpoint to load weights from', required=True)
+					help='Name of saved checkpoint to load weights from', required=False)
 
 parser.add_argument('--face', type=str, 
-					help='Filepath of video/image that contains faces to use', required=True)
+					help='Filepath of video/image that contains faces to use', required=False)
 parser.add_argument('--audio', type=str, 
-					help='Filepath of video/audio file to use as raw audio source', required=True)
+					help='Filepath of video/audio file to use as raw audio source', required=False)
 parser.add_argument('--outfile', type=str, help='Video path to save result. See default for an e.g.', 
 								default='results/result_voice.mp4')
 
