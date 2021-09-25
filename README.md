@@ -4,8 +4,10 @@ Generate realistic news videos solely by providing your transcript. We summarize
 
 ## Features
 - [x] Text Summarization
-- [x] Text Translation
+- [ ] Text Translation
+- [ ] Speech Synthesis
 - [x] Video Generation
+- [x] Lip Synchronization
 - [ ] Multiple Language Support
 - [ ] Make Your Own Speaker
 
@@ -16,5 +18,7 @@ We use [HuggingFace Transformers](https://huggingface.co/transformers/index.html
 The processing pipeline is integrated in FastAPI and gets accessed by a small React frontend. The entire application can be started using docker-compose.
 
 ## Run the application
+
+In order to run the application, you need to have CUDA set up.
 
 `docker-compose up`
