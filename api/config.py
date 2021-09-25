@@ -3,7 +3,7 @@ from pydantic import BaseModel
 class LogConfig(BaseModel):
     """Logging configuration to be set for the server"""
 
-    LOGGER_NAME: str = "mycoolapp"
+    LOGGER_NAME: str = "deep-fake-news"
     LOG_FORMAT: str = "%(levelprefix)s | %(asctime)s | %(message)s"
     LOG_LEVEL: str = "DEBUG"
 
@@ -25,5 +25,5 @@ class LogConfig(BaseModel):
         },
     }
     loggers = {
-        "mycoolapp": {"handlers": ["default"], "level": LOG_LEVEL},
+        "deep-fake-news": {"handlers": ["default"], "level": LOG_LEVEL},
     }
