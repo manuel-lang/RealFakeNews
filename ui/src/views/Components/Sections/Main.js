@@ -110,18 +110,19 @@ export default function Main() {
           </GridContainer>
         </div>
       </div>
-
-      <div className={classes.container}>
-        <div className={classes.title}>
-          <h2>See the result</h2>
+      {loaded && (
+        <div className={classes.container}>
+          <div className={classes.title}>
+            <h2>See the result</h2>
+          </div>
+          <ReactPlayer
+            url={videoURL}
+            controls={true}
+            width={"100%"}
+            height={"100%"}
+          />
         </div>
-        <ReactPlayer
-          url={videoURL}
-          controls={true}
-          width={"100%"}
-          height={"100%"}
-        />
-      </div>
+      )}
     </div>
   );
 }
