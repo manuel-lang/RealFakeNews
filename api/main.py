@@ -14,6 +14,8 @@ from text_to_speech import TextToAudio
 from speech_to_video import SpeechToVideo
 from fastapi import Response
 
+from shutil import copyfile
+
 dictConfig(LogConfig().dict())
 logger = logging.getLogger("deep-fake-news")
 
@@ -64,5 +66,7 @@ def create_video(request_data: APIInput) -> Dict:
     output_path_video = speech_to_video.generate_video(model_path="/app/model_checkpoints/wav2lip.pth", video_path="/app/input_video/output_video.mp4", audio_path=output_audio_path)
     logger.info(f'The generated audio file is in {output_path_video} .')
 
+    output_path_video = f'../ui/public/{output_path_video.split("/")[-1]}'
+
     # return FileResponse(output_path_video)
-    return {'video_path': output_path_video}
+    return {'url': output_path_video}

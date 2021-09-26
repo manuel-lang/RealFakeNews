@@ -10,7 +10,7 @@ import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Button from "components/CustomButtons/Button.js";
 import ReactPlayer from "react-player";
-import myVideo from "assets/videos/trailer_hd.mp4";
+import myVideo from "assets/videos/robin_final_cut.mp4";
 import TextField from "@material-ui/core/TextField";
 
 import triggerProcessing from "requests.js";
@@ -25,26 +25,17 @@ export default function Main() {
   const [summarize, setSummarize] = React.useState(true);
   const [article, setArticle] = React.useState("");
   const [loading, setLoading] = React.useState(false);
-  // const [progress, setProgress] = React.useState(0);
+  const [loaded, setLoaded] = React.useState(false);
+  const [videoURL, setVideoURL] = React.useState();
 
   const trigger = () => {
+    setLoaded(false);
     setLoading(true);
     triggerProcessing(article, summarize).then((data) => {
-      console.log(data);
-      // show video in ReactPlayer
       setLoading(false);
+      setVideoURL(data["url"]);
     });
   };
-
-  // React.useEffect(() => {
-  //   let timer1 = setInterval(
-  //     () => setProgress((progress) => (progress + 1) % 100),
-  //     100
-  //   );
-  //   return () => {
-  //     clearInterval(timer1);
-  //   };
-  // }, []);
 
   return (
     <div className={classes.sections}>
@@ -56,12 +47,14 @@ export default function Main() {
             simply providing the article.
           </h3>
         </div>
-        <ReactPlayer
-          url={myVideo}
-          controls={true}
-          width={"100%"}
-          height={"100%"}
-        />
+        {loaded && (
+          <ReactPlayer
+            url={myVideo}
+            controls={true}
+            width={"100%"}
+            height={"100%"}
+          />
+        )}
       </div>
       <div className={classes.container}>
         <div id="try_it">
@@ -113,13 +106,12 @@ export default function Main() {
           <h2>See the result</h2>
         </div>
         <ReactPlayer
-          url={myVideo}
+          url={videoURL}
           controls={true}
           width={"100%"}
           height={"100%"}
         />
       </div>
-
     </div>
   );
 }
