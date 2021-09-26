@@ -57,14 +57,12 @@ export default function Main() {
             simply providing the article.
           </h3>
         </div>
-        {loaded && (
-          <ReactPlayer
-            url={myVideo}
-            controls={true}
-            width={"100%"}
-            height={"100%"}
-          />
-        )}
+        <ReactPlayer
+          url={myVideo}
+          controls={true}
+          width={"100%"}
+          height={"100%"}
+        />
       </div>
       <div className={classes.container}>
         <div id="try_it">
