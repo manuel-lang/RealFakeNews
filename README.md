@@ -19,6 +19,4 @@ The processing pipeline is integrated in FastAPI and gets accessed by a small Re
 
 ## Run the application
 
-In order to run the application, you need to have CUDA set up.
-
 `docker-compose up`
