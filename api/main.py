@@ -66,7 +66,7 @@ def create_video(request_data: APIInput) -> Dict:
     output_path_video = speech_to_video.generate_video(model_path="/app/model_checkpoints/wav2lip.pth", video_path="/app/input_video/input_video.mp4", audio_path=output_audio_path)
     logger.info(f'The generated audio file is in {output_path_video} .')
 
-    new_output_path_video = f'../ui/public/{output_path_video.split("/")[-1]}'
+    new_output_path_video = f'/usr/src/app/public/{output_path_video.split("/")[-1]}'
     copyfile(output_path_video, new_output_path_video)
 
     # return FileResponse(output_path_video)

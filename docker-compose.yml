@@ -5,15 +5,22 @@ services:
     build: ./api
     ports:
       - "8000:80"
+    volumes:
+      - 'myshare:/usr/src/app'
   frontend:
     container_name: frontend
     build: ./ui
     volumes:
       - './:/app'
       - '/app/node_modules'
+      - 'myshare:/usr/src/app'
     ports:
       - 80:3000
     stdin_open: true
     environment:
       - CHOKIDAR_USEPOLLING=true
     command: npm start
+volumes:
+  myshare:
+    driver: local
+
