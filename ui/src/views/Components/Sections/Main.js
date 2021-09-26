@@ -40,6 +40,8 @@ export default function Main() {
   const trigger = () => {
     setLoaded(false);
     setLoading(true);
+    console.log(article);
+    console.log(summarize);
     triggerProcessing(article, summarize).then((data) => {
       setLoading(false);
       setVideoURL(data["url"]);
