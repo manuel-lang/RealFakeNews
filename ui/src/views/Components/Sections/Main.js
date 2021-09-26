@@ -31,6 +31,7 @@ export default function Main() {
     setLoading(true);
     triggerProcessing(article, summarize).then((data) => {
       console.log(data);
+      // show video in ReactPlayer
       setLoading(false);
     });
   };
@@ -106,6 +107,19 @@ export default function Main() {
           </GridContainer>
         </div>
       </div>
+
+      <div className={classes.container}>
+        <div className={classes.title}>
+          <h2>See the result</h2>
+        </div>
+        <ReactPlayer
+          url={myVideo}
+          controls={true}
+          width={"100%"}
+          height={"100%"}
+        />
+      </div>
+
     </div>
   );
 }

@@ -1,14 +1,17 @@
 from os import listdir, path
 import numpy as np
-import scipy, cv2, os, sys, Wav2Lip.audio
-import json, subprocess, random, string
+import cv2, os
+import subprocess
 from tqdm import tqdm
-from glob import glob
+import logging
 import torch
-import Wav2Lip.face_detection
-# from models import Wav2Lip
+
 from Wav2Lip.models.wav2lip import Wav2Lip
 import platform
+from Wav2Lip import audio
+import Wav2Lip.face_detection as face_detection
+
+logger = logging.getLogger("deep-fake-news")
 
 args_static = False
 args_fps = 25.
@@ -32,7 +35,7 @@ def get_smoothened_boxes(boxes, T):
 	return boxes
 
 def face_detect(images):
-	detector = face_detection.FaceAlignment(face_detection.LandmarksType._2D, 
+	detector = face_detection.FaceAlignment(face_detection.LandmarksType._2D,
 											flip_input=False, device=device)
 
 	batch_size = face_det_batch_size
@@ -177,7 +180,7 @@ def inference(output_path, checkpoint_path, input_video, input_audio):
 	print ("Number of frames available for inference: "+str(len(full_frames)))
 
 	if not input_audio.endswith('.wav'):
-		print('Extracting raw audio...')
+		logger.info('Extracting raw audio...')
 		command = 'ffmpeg -y -i {} -strict -2 {}'.format(input_audio, 'temp/temp.wav')
 
 		subprocess.call(command, shell=True)
@@ -185,7 +188,7 @@ def inference(output_path, checkpoint_path, input_video, input_audio):
 
 	wav = audio.load_wav(input_audio, 16000)
 	mel = audio.melspectrogram(wav)
-	print(mel.shape)
+	logger.info(mel.shape)
 
 	if np.isnan(mel.reshape(-1)).sum() > 0:
 		raise ValueError('Mel contains nan! Using a TTS voice? Add a small epsilon noise to the wav file and try again')
@@ -201,22 +204,20 @@ def inference(output_path, checkpoint_path, input_video, input_audio):
 		mel_chunks.append(mel[:, start_idx : start_idx + mel_step_size])
 		i += 1
 
-	print("Length of mel chunks: {}".format(len(mel_chunks)))
+	logger.info("Length of mel chunks: {}".format(len(mel_chunks)))
 
 	full_frames = full_frames[:len(mel_chunks)]
 
 	batch_size = args_wav2lip_batch_size
 	gen = datagen(full_frames.copy(), mel_chunks)
 
-	for i, (img_batch, mel_batch, frames, coords) in enumerate(tqdm(gen, 
-											total=int(np.ceil(float(len(mel_chunks))/batch_size)))):
+	for i, (img_batch, mel_batch, frames, coords) in enumerate(tqdm(gen, total=int(np.ceil(float(len(mel_chunks))/batch_size)))):
 		if i == 0:
 			model = load_model(checkpoint_path)
-			print ("Model loaded")
+			logger.info("Model loaded")
 
 			frame_h, frame_w = full_frames[0].shape[:-1]
-			out = cv2.VideoWriter('temp/result.avi', 
-									cv2.VideoWriter_fourcc(*'DIVX'), fps, (frame_w, frame_h))
+			out = cv2.VideoWriter('/app/temp/result.avi', cv2.VideoWriter_fourcc(*'DIVX'), fps, (frame_w, frame_h))
 
 		img_batch = torch.FloatTensor(np.transpose(img_batch, (0, 3, 1, 2))).to(device)
 		mel_batch = torch.FloatTensor(np.transpose(mel_batch, (0, 3, 1, 2))).to(device)
@@ -225,7 +226,7 @@ def inference(output_path, checkpoint_path, input_video, input_audio):
 			pred = model(mel_batch, img_batch)
 
 		pred = pred.cpu().numpy().transpose(0, 2, 3, 1) * 255.
-		
+		logger.info(f'im here')
 		for p, f, c in zip(pred, frames, coords):
 			y1, y2, x1, x2 = c
 			p = cv2.resize(p.astype(np.uint8), (x2 - x1, y2 - y1))
@@ -235,5 +236,5 @@ def inference(output_path, checkpoint_path, input_video, input_audio):
 
 	out.release()
 
-	command = 'ffmpeg -y -i {} -i {} -strict -2 -q:v 1 {}'.format(input_audio, 'temp/result.avi', output_path)
+	command = 'ffmpeg -y -i {} -i {} -strict -2 -q:v 1 {}'.format(input_audio, '/app/temp/result.avi', output_path)
 	subprocess.call(command, shell=platform.system() != 'Windows')

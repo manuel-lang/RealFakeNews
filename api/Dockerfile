@@ -1,4 +1,4 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.6
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7
 
 RUN apt-get update -y
 RUN apt install libgl1-mesa-glx -y

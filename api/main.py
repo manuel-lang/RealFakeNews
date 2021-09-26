@@ -1,3 +1,4 @@
+import time
 from logging.config import dictConfig
 import logging
 from config import LogConfig
@@ -11,18 +12,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from text_to_speech import TextToAudio
 from speech_to_video import SpeechToVideo
+from fastapi.responses import FileResponse
 
 dictConfig(LogConfig().dict())
 logger = logging.getLogger("deep-fake-news")
-text_to_audio = TextToAudio(
-    output_path='',
-    output_name='audio.wav',
-    rate=22050
-)
-speech_to_video = SpeechToVideo(
-    output_path='',
-    output_name='output_video.mp4',
-)
+
 app = FastAPI(debug=True)
 
 app.add_middleware(
@@ -32,7 +26,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 
 @app.post("/")
@@ -47,15 +40,28 @@ def create_video(request_data: APIInput) -> Dict:
         Dict: JSON response data
     """
     logger.info("Creating text summary...")
-    if request_data.summarize is not None and request_data:
+    text_summary = request_data.text
+    logger.info(f'Summarize? {request_data.summarize}')
+    if request_data is not None and request_data.summarize:
         text_summary = summarize_text(
             text=request_data.text, min_words=request_data.min_text_length, max_words=request_data.max_text_length)
 
     logger.info("Creating audio...")
-    output_path = text_to_audio.parse_text(text_to_convert=text_summary)
+    text_to_audio = TextToAudio(
+        output_path=str(int(time.time())),
+        output_name='audio.wav',
+        rate=22050
+    )
+    logger.info(f'Converting "{text_summary}" into audio.')
+    output_audio_path = text_to_audio.parse_text(text_to_convert=text_summary)
+    logger.info(f'The generated audio file is in {output_audio_path}.')
 
     logger.info("Creating video...")
-    # Create video
-    # output_path_video = speech_to_video.generate_video(self, model_path="wav2lip.pth", video_path="input_video.mp4", audio_path=output_path)
+    speech_to_video = SpeechToVideo(
+        output_path='/app/output_video/',
+        output_name='output_video.mp4',
+    )
+    output_path_video = speech_to_video.generate_video(model_path="/app/model_checkpoints/wav2lip.pth", video_path="/app/input_video/input_video.mp4", audio_path=output_audio_path)
+    logger.info(f'The generated audio file is in {output_path_video} .')
 
-    return {"Hello": "World"}
+    return FileResponse(output_path_video)
