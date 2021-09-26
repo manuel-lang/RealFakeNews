@@ -21,12 +21,21 @@ import styles from "assets/jss/material-kit-react/views/componentsSections/basic
 const useStyles = makeStyles(styles);
 
 export default function Main() {
+  const useStateWithLocalStorage = (localStorageKey) => {
+    const [value, setValue] = React.useState(
+      localStorage.getItem(localStorageKey) || ""
+    );
+    React.useEffect(() => {
+      localStorage.setItem(localStorageKey, value);
+    }, [value]);
+    return [value, setValue];
+  };
   const classes = useStyles();
-  const [summarize, setSummarize] = React.useState(true);
-  const [article, setArticle] = React.useState("");
+  const [summarize, setSummarize] = useStateWithLocalStorage("summarize");
+  const [article, setArticle] = useStateWithLocalStorage("article");
   const [loading, setLoading] = React.useState(false);
-  const [loaded, setLoaded] = React.useState(false);
-  const [videoURL, setVideoURL] = React.useState();
+  const [loaded, setLoaded] = useStateWithLocalStorage("loaded");
+  const [videoURL, setVideoURL] = useStateWithLocalStorage("videoURL");
 
   const trigger = () => {
     setLoaded(false);
@@ -34,6 +43,7 @@ export default function Main() {
     triggerProcessing(article, summarize).then((data) => {
       setLoading(false);
       setVideoURL(data["url"]);
+      setLoaded(true);
     });
   };
 
@@ -94,7 +104,7 @@ export default function Main() {
                 />
               </div>
             </GridItem>
-            <Button color="primary" round onClick={trigger}>
+            <Button color="primary" round onClick={() => trigger()}>
               {loading ? "Generating" : "Generate"}
             </Button>
           </GridContainer>
