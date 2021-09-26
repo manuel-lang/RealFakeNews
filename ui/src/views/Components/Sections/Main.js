@@ -31,8 +31,8 @@ export default function Main() {
     return [value, setValue];
   };
   const classes = useStyles();
-  const [summarize, setSummarize] = useStateWithLocalStorage("summarize");
-  const [article, setArticle] = useStateWithLocalStorage("article");
+  const [summarize, setSummarize] = React.useState(false);
+  const [article, setArticle] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [loaded, setLoaded] = useStateWithLocalStorage("loaded");
   const [videoURL, setVideoURL] = useStateWithLocalStorage("videoURL");
