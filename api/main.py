@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from text_to_speech import TextToAudio
 from speech_to_video import SpeechToVideo
-from fastapi.responses import FileResponse
+from fastapi import Response
 
 dictConfig(LogConfig().dict())
 logger = logging.getLogger("deep-fake-news")
@@ -61,7 +61,8 @@ def create_video(request_data: APIInput) -> Dict:
         output_path='/app/output_video/',
         output_name='output_video.mp4',
     )
-    output_path_video = speech_to_video.generate_video(model_path="/app/model_checkpoints/wav2lip.pth", video_path="/app/input_video/input_video.mp4", audio_path=output_audio_path)
+    output_path_video = speech_to_video.generate_video(model_path="/app/model_checkpoints/wav2lip.pth", video_path="/app/input_video/output_video.mp4", audio_path=output_audio_path)
     logger.info(f'The generated audio file is in {output_path_video} .')
 
-    return FileResponse(output_path_video)
+    # return FileResponse(output_path_video)
+    return {'video_path': output_path_video}
